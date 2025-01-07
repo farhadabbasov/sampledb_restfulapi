@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -12,7 +14,9 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        //
+        $employees = Employee::all();
+
+        return response()->json($employees);
     }
 
     /**
@@ -20,7 +24,18 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Employee::create($request->only([
+            'employeeNumber',
+            'lastName',
+            'firstName',
+            'extension',
+            'email',
+            'officeCode',
+            'reportsTo',
+            'jobTitle',
+        ]));
+
+        return response()->json("Employee stored successfully");
     }
 
     /**
@@ -28,7 +43,10 @@ class EmployeeController extends Controller
      */
     public function show(string $id)
     {
-        //
+       /* $customers = new Customer();
+          $customers->orders(); */
+
+        return Employee::where("employeeNumber", $id)->first();
     }
 
     /**
@@ -36,7 +54,18 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Employee::where("employeeNumber", $id)->first()->update($request->only([
+            'employeeNumber',
+            'lastName',
+            'firstName',
+            'extension',
+            'email',
+            'officeCode',
+            'reportsTo',
+            'jobTitle',
+        ]));
+
+        return response()->json("Employee updated");
     }
 
     /**
@@ -44,6 +73,8 @@ class EmployeeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        Employee::where("employeeNumber", $id)->delete();
+        return response()->json("Employee deleted");
     }
 }

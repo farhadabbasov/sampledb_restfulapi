@@ -10,4 +10,24 @@ class OrderDetail extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+
+    protected $fillable = [
+        'orderNumber',
+        'productCode',
+        'quantityOrdered',
+        'priceEach',
+        'orderLineNumber',
+    ];
+
+    public function orders()
+    {
+        return $this->belongsTo(Order::class, 'orderNumber', 'orderNumber');
+    }
+
+
+    public function products()
+    {
+        return $this->belongsTo(Product::class, 'productCode', 'productCode');
+    }
 }
