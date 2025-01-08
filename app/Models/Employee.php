@@ -27,7 +27,7 @@ class Employee extends Model
     ];
 
 
-    public function office(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function offices(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Office::class, 'officeCode', 'officeCode');
     }

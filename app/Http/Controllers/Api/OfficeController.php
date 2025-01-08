@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Office;
 use Illuminate\Http\Request;
 
 class OfficeController extends Controller
@@ -12,7 +13,9 @@ class OfficeController extends Controller
      */
     public function index()
     {
-        //
+        $offices = Office::all();
+
+        return response()->json($offices);
     }
 
     /**
@@ -20,7 +23,19 @@ class OfficeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Office::create($request->only([
+            'officeCode',
+            'city',
+            'phone',
+            'addressLine1',
+            'addressLine2',
+            'state',
+            'country',
+            'postalCode',
+            'territory',
+        ]));
+
+        return response()->json("Offices stored successfully");
     }
 
     /**
@@ -28,7 +43,7 @@ class OfficeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Office::where("officeCode", $id)->first();
     }
 
     /**
@@ -36,7 +51,19 @@ class OfficeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Office::where("officeCode", $id)->first()->update($request->only([
+            'officeCode',
+            'city',
+            'phone',
+            'addressLine1',
+            'addressLine2',
+            'state',
+            'country',
+            'postalCode',
+            'territory',
+        ]));
+
+        return response()->json("Offices updated successfully");
     }
 
     /**
@@ -44,6 +71,7 @@ class OfficeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Office::where("officeCode", $id)->first()->delete();
+        return response()->json("Office deleted successfully");
     }
 }

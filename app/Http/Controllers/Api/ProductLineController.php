@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProductLine;
 use Illuminate\Http\Request;
 
 class ProductLineController extends Controller
@@ -12,7 +13,9 @@ class ProductLineController extends Controller
      */
     public function index()
     {
-        //
+        $product_lines = ProductLine::all();
+
+        return response()->json($product_lines);
     }
 
     /**
@@ -20,7 +23,14 @@ class ProductLineController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        ProductLine::create($request->only([
+            'productLine',
+            'textDescription',
+            'htmlDescription',
+            'image',
+        ]));
+
+        return response()->json("ProductLine created");
     }
 
     /**
@@ -28,7 +38,7 @@ class ProductLineController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return ProductLine::where("productLine", $id)->get();
     }
 
     /**
@@ -36,7 +46,14 @@ class ProductLineController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        ProductLine::where("productLine", $id)->first->update($request->only([
+            'productLine',
+            'textDescription',
+            'htmlDescription',
+            'image',
+        ]));
+
+        return response()->json("ProductLine updated");
     }
 
     /**
@@ -44,6 +61,8 @@ class ProductLineController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        ProductLine::where("productLine", $id)->first()->delete();
+
+        return response()->json("ProductLine deleted");
     }
 }

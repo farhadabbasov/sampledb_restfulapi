@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Office;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -12,7 +14,9 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Order::all();
+
+        return response()->json($orders);
     }
 
     /**
@@ -20,7 +24,17 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Order::create($request->only([
+            'orderNumber',
+            'orderDate',
+            'requiredDate',
+            'shippedDate',
+            'status',
+            'comments',
+            'customerNumber',
+        ]));
+
+        return response()->json("Orders stored successfully");
     }
 
     /**
@@ -28,7 +42,7 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Office::where('orderNumber', $id)->first();
     }
 
     /**
@@ -36,7 +50,17 @@ class OrderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Office::where('orderNumber', $id)->first()->update($request->only([
+            'orderNumber',
+            'orderDate',
+            'requiredDate',
+            'shippedDate',
+            'status',
+            'comments',
+            'customerNumber',
+        ]));
+
+        return response()->json("Orders updated successfully");
     }
 
     /**
@@ -44,6 +68,7 @@ class OrderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Office::where('orderNumber', $id)->first()->delete();
+        return response()->json("Orders deleted successfully");
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 
 class OrderDetailController extends Controller
@@ -12,7 +14,9 @@ class OrderDetailController extends Controller
      */
     public function index()
     {
-        //
+        $order_details = OrderDetail::all();
+
+        return response()->json($order_details);
     }
 
     /**
@@ -20,7 +24,15 @@ class OrderDetailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        OrderDetail::create($request->only([
+            'orderNumber',
+            'productCode',
+            'quantityOrdered',
+            'priceEach',
+            'orderLineNumber',
+        ]));
+
+        return response()->json("OrderDetails stored successfully");
     }
 
     /**
@@ -28,7 +40,7 @@ class OrderDetailController extends Controller
      */
     public function show(string $id)
     {
-        //
+       return OrderDetail::where('orderNumber', $id)->get();
     }
 
     /**
@@ -36,7 +48,15 @@ class OrderDetailController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        OrderDetail::where('orderNumber', $id)->first->update($request->only([
+            'orderNumber',
+            'productCode',
+            'quantityOrdered',
+            'priceEach',
+            'orderLineNumber',
+        ]));
+
+        return response()->json("OrderDetail updated");
     }
 
     /**
@@ -44,6 +64,7 @@ class OrderDetailController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        OrderDetail::where('orderNumber', $id)->first()->delete();
+        return response()->json("OrderDetail deleted successfully");
     }
 }

@@ -10,8 +10,8 @@ class OrderDetail extends Model
     use HasFactory;
 
     public $timestamps = false;
-
-
+//    protected $primaryKey = '';
+//    public $incrementing = false;
     protected $fillable = [
         'orderNumber',
         'productCode',

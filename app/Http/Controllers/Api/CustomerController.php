@@ -80,7 +80,6 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        dd("salam");
         Customer::where("customerNumber",$id)->first()->delete();
 
         return response()->json("Customer destroy");
