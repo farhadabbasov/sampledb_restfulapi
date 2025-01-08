@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Employee\IndexRequest;
+use App\Http\Requests\Employee\ShowRequest;
 use App\Http\Requests\Employee\StoreRequest;
+use App\Http\Requests\Employee\UpdateRequest;
 use App\Models\Customer;
 use App\Models\Employee;
 use Illuminate\Http\Request;
@@ -43,7 +45,7 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ShowRequest $id)
     {
        /* $customers = new Customer();
           $customers->orders(); */
@@ -54,7 +56,7 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         Employee::where("employeeNumber", $id)->first()->update($request->only([
             'employeeNumber',
