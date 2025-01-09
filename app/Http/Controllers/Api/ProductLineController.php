@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductLine\IndexRequest;
+use App\Http\Requests\ProductLine\ShowRequest;
+use App\Http\Requests\ProductLine\StoreRequest;
+use App\Http\Requests\ProductLine\UpdateRequest;
 use App\Models\ProductLine;
 use Illuminate\Http\Request;
 
@@ -11,7 +15,7 @@ class ProductLineController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
         $product_lines = ProductLine::all();
 
@@ -21,7 +25,7 @@ class ProductLineController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         ProductLine::create($request->only([
             'productLine',
@@ -36,7 +40,7 @@ class ProductLineController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ShowRequest $request, $id)
     {
         return ProductLine::where("productLine", $id)->get();
     }
@@ -44,10 +48,9 @@ class ProductLineController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         ProductLine::where("productLine", $id)->first->update($request->only([
-            'productLine',
             'textDescription',
             'htmlDescription',
             'image',

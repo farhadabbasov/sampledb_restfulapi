@@ -12,7 +12,7 @@ class Customer extends Model
     protected $primaryKey = 'customerNumber';
     public $incrementing = false;
     protected $keyType = 'int';
-    public $timestamps = false;
+   public $timestamps = false;
 
     protected $fillable = [
         'customerNumber',

@@ -22,13 +22,12 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'employeeNumber'=>['required','integer','unique:employees,employeeNumber'],
             'lastName'=>['required','max:50','string'],
             'firstName'=>['required','max:50','string'],
             'extension'=>['required','max:10','string'],
-            'email'=> ['required','max:100','string','email','unique:employees,email'],
+            'email'=> ['required','max:100','string','email'],
             'officeCode'=>['required','max:10','string','exists:offices,officeCode'],
-            'reportsTo'=>['nullable','integer'],
+            'reportsTo'=>['nullable','integer','exists:employees,reportsTo'],
             'jobTitle'=>['required','max:50','string'],
         ];
     }

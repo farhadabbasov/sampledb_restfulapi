@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Payment\IndexRequest;
+use App\Http\Requests\Payment\ShowRequest;
+use App\Http\Requests\Payment\StoreRequest;
+use App\Http\Requests\Payment\UpdateRequest;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 
@@ -11,7 +15,7 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
         $payments = Payment::all();
 
@@ -21,7 +25,7 @@ class PaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         Payment::create($request->only([
             'checkNumber',
@@ -36,7 +40,7 @@ class PaymentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ShowRequest $request, $id)
     {
         return Payment::where('checkNumber', $id)->get();
     }
@@ -44,10 +48,9 @@ class PaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         Payment::where('checkNumber', $id)->update($request->only([
-            'checkNumber',
             'paymentDate',
             'amount',
             'customerNumber',

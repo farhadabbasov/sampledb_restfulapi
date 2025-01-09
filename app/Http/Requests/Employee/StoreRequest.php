@@ -28,7 +28,7 @@ class StoreRequest extends FormRequest
             'extension'=>['required','max:10','string'],
             'email'=> ['required','max:100','string','email','unique:employees,email'],
             'officeCode'=>['required','max:10','string','exists:offices,officeCode'],
-            'reportsTo'=>['nullable','integer'],
+            'reportsTo'=>['nullable','integer','exists:employees,reportsTo'],
             'jobTitle'=>['required','max:50','string'],
         ];
     }

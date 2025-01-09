@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OrderDetail\IndexRequest;
+use App\Http\Requests\OrderDetail\ShowRequest;
+use App\Http\Requests\OrderDetail\StoreRequest;
+use App\Http\Requests\OrderDetail\UpdateRequest;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
@@ -12,7 +16,7 @@ class OrderDetailController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
         $order_details = OrderDetail::all();
 
@@ -22,7 +26,7 @@ class OrderDetailController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         OrderDetail::create($request->only([
             'orderNumber',
@@ -38,7 +42,7 @@ class OrderDetailController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ShowRequest $request, $id)
     {
        return OrderDetail::where('orderNumber', $id)->get();
     }
@@ -46,10 +50,9 @@ class OrderDetailController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         OrderDetail::where('orderNumber', $id)->first->update($request->only([
-            'orderNumber',
             'productCode',
             'quantityOrdered',
             'priceEach',

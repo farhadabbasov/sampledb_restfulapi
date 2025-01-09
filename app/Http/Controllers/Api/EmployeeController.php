@@ -45,7 +45,7 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ShowRequest $id)
+    public function show(ShowRequest $request, $id)
     {
        /* $customers = new Customer();
           $customers->orders(); */
@@ -59,7 +59,6 @@ class EmployeeController extends Controller
     public function update(UpdateRequest $request, string $id)
     {
         Employee::where("employeeNumber", $id)->first()->update($request->only([
-            'employeeNumber',
             'lastName',
             'firstName',
             'extension',

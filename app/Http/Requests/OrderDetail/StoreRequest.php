@@ -11,7 +11,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'orderNumber'=>['required','integer','exists:orders,orderNumber'],
+            'productCode'=>['required','string','exists:products,productCode'],
+            'quantityOrdered'=>['required','integer'],
+            'priceEach'=>['required','decimal'],
+            'orderLineNumber'=>['required','smallint'],
         ];
     }
 }

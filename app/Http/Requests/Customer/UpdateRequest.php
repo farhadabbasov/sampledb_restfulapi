@@ -11,7 +11,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,20 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            //
+            'customerName'=>['required','max:50','string'],
+            'contactLastName'=>['required','max:50','string'],
+            'contactFirstName'=>['required','max:10','string'],
+            'phone'=>['required','max:50','string'],
+            'addressLine1'=>['required','max:50','string'],
+            'addressLine2'=>['nullable','max:50','string'],
+            'city'=>['required','max:50','string'],
+            'state'=>['nullable','max:50','string'],
+            'postalCode'=>['nullable','max:50','string'],
+            'country'=>['required','max:50','string'],
+            'salesRepEmployeeNumber'=>['nullable','integer','exists:employees,employeeNumber'],
+            'creditLimit'=>['nullable','decimal:2'],
         ];
     }
 }

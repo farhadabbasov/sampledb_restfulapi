@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Customer\IndexRequest;
+use App\Http\Requests\Customer\ShowRequest;
+use App\Http\Requests\Customer\StoreRequest;
+use App\Http\Requests\Customer\UpdateRequest;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 
@@ -11,7 +15,7 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
         $customers = Customer::all();
 
@@ -21,7 +25,7 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         Customer::create($request->only([
             'customerNumber',
@@ -45,7 +49,7 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ShowRequest $request, $id)
     {
        return Customer::where("customerNumber",$id)->first();
     }
@@ -53,11 +57,10 @@ class CustomerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
 
         Customer::where("customerNumber",$id)->first()->update($request->only([
-            'customerNumber',
             'customerName',
             'contactLastName',
             'contactFirstName',

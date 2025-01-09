@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Api\CheckSecretKey;
+use App\Http\Middleware\Api\TimeLine;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -21,7 +23,10 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        CheckSecretKey::class,
+        TimeLine::class,
     ];
+
 
     /**
      * The application's route middleware groups.
@@ -63,5 +68,7 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'check.secret'=> CheckSecretKey::class,
+        'timeline'=> Timeline::class
     ];
 }

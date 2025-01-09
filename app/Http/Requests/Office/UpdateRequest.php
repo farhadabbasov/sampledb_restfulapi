@@ -11,7 +11,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'city'=>['required','string','max:50'],
+            'phone'=>['required','string','max:50'],
+            'addressLine1'=>['required','string','max:50'],
+            'addressLine2'=>['nullable','string','max:50'],
+            'state'=>['nullable','string','max:50'],
+            'country'=>['required','string','max:50'],
+            'postalCode'=>['required','string','max:15'],
+            'territory'=>['required','string','max:10'],
         ];
     }
 }

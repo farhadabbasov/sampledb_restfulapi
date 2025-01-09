@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Office\IndexRequest;
+use App\Http\Requests\Office\ShowRequest;
+use App\Http\Requests\Office\StoreRequest;
+use App\Http\Requests\Office\UpdateRequest;
 use App\Models\Office;
 use Illuminate\Http\Request;
 
@@ -11,7 +15,7 @@ class OfficeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
         $offices = Office::all();
 
@@ -21,7 +25,7 @@ class OfficeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         Office::create($request->only([
             'officeCode',
@@ -41,7 +45,7 @@ class OfficeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ShowRequest $request, $id)
     {
         return Office::where("officeCode", $id)->first();
     }
@@ -49,10 +53,9 @@ class OfficeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         Office::where("officeCode", $id)->first()->update($request->only([
-            'officeCode',
             'city',
             'phone',
             'addressLine1',

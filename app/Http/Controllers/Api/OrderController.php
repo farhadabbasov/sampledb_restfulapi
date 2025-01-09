@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Order\IndexRequest;
+use App\Http\Requests\Order\ShowRequest;
+use App\Http\Requests\Order\StoreRequest;
+use App\Http\Requests\Order\UpdateRequest;
 use App\Models\Office;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -12,7 +16,7 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexRequest $request)
     {
         $orders = Order::all();
 
@@ -22,7 +26,7 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
         Order::create($request->only([
             'orderNumber',
@@ -40,7 +44,7 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ShowRequest $request, $id)
     {
         return Office::where('orderNumber', $id)->first();
     }
@@ -48,10 +52,9 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         Office::where('orderNumber', $id)->first()->update($request->only([
-            'orderNumber',
             'orderDate',
             'requiredDate',
             'shippedDate',
