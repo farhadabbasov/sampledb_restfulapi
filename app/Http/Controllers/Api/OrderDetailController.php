@@ -9,6 +9,7 @@ use App\Http\Requests\OrderDetail\StoreRequest;
 use App\Http\Requests\OrderDetail\UpdateRequest;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Utility\Responser;
 use Illuminate\Http\Request;
 
 class OrderDetailController extends Controller
@@ -18,9 +19,9 @@ class OrderDetailController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $order_details = OrderDetail::all();
-
-        return response()->json($order_details);
+        return Responser::json(
+            OrderDetail::all()
+        );
     }
 
     /**
@@ -28,15 +29,11 @@ class OrderDetailController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        OrderDetail::create($request->only([
-            'orderNumber',
-            'productCode',
-            'quantityOrdered',
-            'priceEach',
-            'orderLineNumber',
-        ]));
+        OrderDetail::create(
+            $request->validated()
+        );
 
-        return response()->json("OrderDetails stored successfully");
+        return Responser::json(message: "OrderDetail created successfully");
     }
 
     /**
@@ -44,7 +41,9 @@ class OrderDetailController extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
-       return OrderDetail::where('orderNumber', $id)->get();
+       return Responser::json(
+           data: OrderDetail::where('orderNumber', $id)->firstOrFail(),
+       );
     }
 
     /**
@@ -52,14 +51,12 @@ class OrderDetailController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        OrderDetail::where('orderNumber', $id)->first->update($request->only([
-            'productCode',
-            'quantityOrdered',
-            'priceEach',
-            'orderLineNumber',
-        ]));
+        OrderDetail::where('orderNumber', $id)
+            ->firstOrFail()->update(
+                $request->validated()
+            );
 
-        return response()->json("OrderDetail updated");
+        return Responser::json();
     }
 
     /**
@@ -67,7 +64,9 @@ class OrderDetailController extends Controller
      */
     public function destroy(string $id)
     {
-        OrderDetail::where('orderNumber', $id)->first()->delete();
-        return response()->json("OrderDetail deleted successfully");
+        OrderDetail::findOrFail($id)
+            ->delete();
+
+        return Responser::json(status: 204);
     }
 }

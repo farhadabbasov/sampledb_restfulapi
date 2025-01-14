@@ -9,6 +9,7 @@ use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
 use App\Models\Office;
 use App\Models\Order;
+use App\Utility\Responser;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -18,9 +19,9 @@ class OrderController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $orders = Order::all();
-
-        return response()->json($orders);
+        return Responser::json(
+            Order::all()
+        );
     }
 
     /**
@@ -28,17 +29,11 @@ class OrderController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        Order::create($request->only([
-            'orderNumber',
-            'orderDate',
-            'requiredDate',
-            'shippedDate',
-            'status',
-            'comments',
-            'customerNumber',
-        ]));
+        Order::create(
+            $request->validated()
+        );
 
-        return response()->json("Orders stored successfully");
+        return Responser::json(message: "Order created successfully");
     }
 
     /**
@@ -46,7 +41,9 @@ class OrderController extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
-        return Office::where('orderNumber', $id)->first();
+        return Responser::json(
+            data: Office::where('orderNumber', $id)->firstOrFail()
+        );
     }
 
     /**
@@ -54,16 +51,12 @@ class OrderController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        Office::where('orderNumber', $id)->first()->update($request->only([
-            'orderDate',
-            'requiredDate',
-            'shippedDate',
-            'status',
-            'comments',
-            'customerNumber',
-        ]));
+        Office::where("orderNumber", $id)
+            ->firstOrFail()->update(
+                $request->validated()
+            );
 
-        return response()->json("Orders updated successfully");
+        return Responser::json();
     }
 
     /**
@@ -71,7 +64,9 @@ class OrderController extends Controller
      */
     public function destroy(string $id)
     {
-        Office::where('orderNumber', $id)->first()->delete();
-        return response()->json("Orders deleted successfully");
+        Order::findOrFail($id)
+            ->delete();
+
+        return Responser::json(status: 204);
     }
 }

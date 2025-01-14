@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\Api\CheckSecretKey;
+use App\Http\Middleware\Api\DenyAccessMiddleware;
 use App\Http\Middleware\Api\TimeLine;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -69,6 +70,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check.secret'=> CheckSecretKey::class,
-        'timeline'=> Timeline::class
+        'timeline'=> Timeline::class,
+        'deny.access'=> DenyAccessMiddleware::class,
     ];
 }

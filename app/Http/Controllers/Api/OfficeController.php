@@ -8,6 +8,7 @@ use App\Http\Requests\Office\ShowRequest;
 use App\Http\Requests\Office\StoreRequest;
 use App\Http\Requests\Office\UpdateRequest;
 use App\Models\Office;
+use App\Utility\Responser;
 use Illuminate\Http\Request;
 
 class OfficeController extends Controller
@@ -17,9 +18,9 @@ class OfficeController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $offices = Office::all();
-
-        return response()->json($offices);
+        return Responser::json(
+            Office::all()
+        );
     }
 
     /**
@@ -27,19 +28,11 @@ class OfficeController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        Office::create($request->only([
-            'officeCode',
-            'city',
-            'phone',
-            'addressLine1',
-            'addressLine2',
-            'state',
-            'country',
-            'postalCode',
-            'territory',
-        ]));
+        Office::create(
+            $request->validated()
+        );
 
-        return response()->json("Offices stored successfully");
+        return Responser::json(message: "Office created successfully");
     }
 
     /**
@@ -47,7 +40,9 @@ class OfficeController extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
-        return Office::where("officeCode", $id)->first();
+        return Responser::json(
+            data: Office::where("officeCode", $id)->firstOrFail()
+        );
     }
 
     /**
@@ -55,18 +50,12 @@ class OfficeController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        Office::where("officeCode", $id)->first()->update($request->only([
-            'city',
-            'phone',
-            'addressLine1',
-            'addressLine2',
-            'state',
-            'country',
-            'postalCode',
-            'territory',
-        ]));
+        Office::where("officeCode", $id)
+            ->firstOrFail()->update(
+                $request->validated()
+            );
 
-        return response()->json("Offices updated successfully");
+        return Responser::json();
     }
 
     /**
@@ -74,7 +63,8 @@ class OfficeController extends Controller
      */
     public function destroy(string $id)
     {
-        Office::where("officeCode", $id)->first()->delete();
-        return response()->json("Office deleted successfully");
+        Office::findOrFail($id)
+            ->delete();
+        return Responser::json(status: 204);
     }
 }

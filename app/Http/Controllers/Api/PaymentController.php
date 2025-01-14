@@ -8,6 +8,7 @@ use App\Http\Requests\Payment\ShowRequest;
 use App\Http\Requests\Payment\StoreRequest;
 use App\Http\Requests\Payment\UpdateRequest;
 use App\Models\Payment;
+use App\Utility\Responser;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -17,9 +18,9 @@ class PaymentController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $payments = Payment::all();
-
-        return response()->json($payments);
+       return Responser::json(
+           Payment::all()
+       );
     }
 
     /**
@@ -27,14 +28,11 @@ class PaymentController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        Payment::create($request->only([
-            'checkNumber',
-            'paymentDate',
-            'amount',
-            'customerNumber',
-        ]));
+        Payment::create(
+            $request->validated()
+        );
 
-        response()->json("Payment created");
+        return Responser::json(message: "Payment created successfully");
     }
 
     /**
@@ -42,7 +40,9 @@ class PaymentController extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
-        return Payment::where('checkNumber', $id)->get();
+        return Responser::json(
+            data: Payment::where("checkNumber", $id)->firstOrFail()
+        );
     }
 
     /**
@@ -50,11 +50,12 @@ class PaymentController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        Payment::where('checkNumber', $id)->update($request->only([
-            'paymentDate',
-            'amount',
-            'customerNumber',
-        ]));
+        Payment::where('checkNumber', $id)
+            ->firstOrFail()->update(
+            $request->validated()
+        );
+
+        return Responser::json();
     }
 
     /**
@@ -62,8 +63,9 @@ class PaymentController extends Controller
      */
     public function destroy(string $id)
     {
-        Payment::where('checkNumber', $id)->first()->delete();
+        Payment::findOrFail($id)
+            ->delete();
 
-        return response()->json("Payment deleted");
+        return Responser::json(status: 204);
     }
 }

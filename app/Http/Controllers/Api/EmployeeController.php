@@ -9,6 +9,7 @@ use App\Http\Requests\Employee\StoreRequest;
 use App\Http\Requests\Employee\UpdateRequest;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Utility\Responser;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -18,9 +19,26 @@ class EmployeeController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $employees = Employee::all();
+        $requestedData = $request->validated();
+//        $statement = Employee::when(!empty($requestedData['lastName']), function ($query) use ($requestedData) {
+//            $query->where('lastName',$requestedData['lastName']);
+//        })
+//        ->when(!empty($requestedData['firstName']), function ($query) use ($requestedData) {
+//            $query->where('firstName',$requestedData['firstName']);
+//        })
+//            ->when(!empty($requestedData['employeeNumber']), function ($query) use ($requestedData) {
+//                $query->where('employeeNumber',$requestedData['employeeNumber']);
+//            })->get();
 
-        return response()->json($employees);
+        $statement = Employee::query();
+
+        if($request->has("firstName")){
+            $statement->where("firstname",$request->get('firstName'));
+        }
+
+        return Responser::json(
+            $statement->get()
+        );
     }
 
     /**
@@ -28,18 +46,11 @@ class EmployeeController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        Employee::create($request->only([
-            'employeeNumber',
-            'lastName',
-            'firstName',
-            'extension',
-            'email',
-            'officeCode',
-            'reportsTo',
-            'jobTitle',
-        ]));
+        Employee::create(
+            $request->validated()
+        );
 
-        return response()->json("Employee stored successfully");
+        return Responser::json(message: "men oz mesajimi yazdim");
     }
 
     /**
@@ -50,7 +61,9 @@ class EmployeeController extends Controller
        /* $customers = new Customer();
           $customers->orders(); */
 
-        return Employee::where("employeeNumber", $id)->first();
+        return Responser::json(
+            data: Customer::where("employeeNumber", $id)->firstOrFail()
+        );
     }
 
     /**
@@ -58,17 +71,12 @@ class EmployeeController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        Employee::where("employeeNumber", $id)->first()->update($request->only([
-            'lastName',
-            'firstName',
-            'extension',
-            'email',
-            'officeCode',
-            'reportsTo',
-            'jobTitle',
-        ]));
+        Employee::where("employeeNumber", $id)
+            ->firstOrFail()->update(
+                $request->validated()
+            );
 
-        return response()->json("Employee updated");
+        return Responser::json();
     }
 
     /**
@@ -76,8 +84,9 @@ class EmployeeController extends Controller
      */
     public function destroy(string $id)
     {
+        Employee::findOrFail($id)
+            ->delete();
 
-        Employee::where("employeeNumber", $id)->first()->delete();
-        return response()->json("Employee deleted");
+        return Responser::json(status: 204);
     }
 }

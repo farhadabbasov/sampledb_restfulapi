@@ -8,6 +8,7 @@ use App\Http\Requests\Customer\ShowRequest;
 use App\Http\Requests\Customer\StoreRequest;
 use App\Http\Requests\Customer\UpdateRequest;
 use App\Models\Customer;
+use App\Utility\Responser;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -17,33 +18,21 @@ class CustomerController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $customers = Customer::all();
-
-        return response()->json($customers);
+        return Responser::json(
+            Customer::all()
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): \Illuminate\Http\JsonResponse
     {
-        Customer::create($request->only([
-            'customerNumber',
-            'customerName',
-            'contactLastName',
-            'contactFirstName',
-            'phone',
-            'addressLine1',
-            'addressLine2',
-            'city',
-            'state',
-            'postalCode',
-            'country',
-            'salesRepEmployeeNumber',
-            'creditLimit',
-        ]));
+       Customer::create(
+            $request->validated()
+        );
 
-        return response()->json("Customer store");
+       return Responser::json( message: "men oz mesajimi yazdim");
     }
 
     /**
@@ -51,7 +40,9 @@ class CustomerController extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
-       return Customer::where("customerNumber",$id)->first();
+       return Responser::json(
+           data:Customer::where("customerNumber",$id)->firstOrFail()
+       );
     }
 
     /**
@@ -60,22 +51,27 @@ class CustomerController extends Controller
     public function update(UpdateRequest $request, string $id)
     {
 
-        Customer::where("customerNumber",$id)->first()->update($request->only([
-            'customerName',
-            'contactLastName',
-            'contactFirstName',
-            'phone',
-            'addressLine1',
-            'addressLine2',
-            'city',
-            'state',
-            'postalCode',
-            'country',
-            'salesRepEmployeeNumber',
-            'creditLimit',
-        ]));
+//        Customer::where("customerNumber",$id)->first()->update($request->only([
+//            'customerName',
+//            'contactLastName',
+//            'contactFirstName',
+//            'phone',
+//            'addressLine1',
+//            'addressLine2',
+//            'city',
+//            'state',
+//            'postalCode',
+//            'country',
+//            'salesRepEmployeeNumber',
+//            'creditLimit',
+//        ]));
 
-        return response()->json("Customer update");
+        Customer::where("customerNumber",$id)
+            ->firstOrFail()->update(
+                $request->validated()
+            );
+
+        return Responser::json();
     }
 
     /**
@@ -83,8 +79,9 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        Customer::where("customerNumber",$id)->first()->delete();
+        Customer::findOrFail($id)
+            ->delete();
 
-        return response()->json("Customer destroy");
+        return Responser::json(status: 204);
     }
 }

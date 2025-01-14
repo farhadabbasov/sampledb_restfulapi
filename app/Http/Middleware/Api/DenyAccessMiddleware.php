@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckSecretKey
+class DenyAccessMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,13 +16,7 @@ class CheckSecretKey
     public function handle(Request $request, Closure $next): Response
     {
 
-        $secretKey = $request->header('SECRET_KEY');
-
-
-     if ($secretKey !== config("credentials.api_secret_key")) {
-         return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
-     }
-
+      //return response()->json(['message' => 'Access denied.'], 403);
         return $next($request);
     }
 }

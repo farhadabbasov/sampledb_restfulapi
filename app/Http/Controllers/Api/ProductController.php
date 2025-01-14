@@ -8,6 +8,7 @@ use App\Http\Requests\Product\ShowRequest;
 use App\Http\Requests\Product\StoreRequest;
 use App\Http\Requests\Product\UpdateRequest;
 use App\Models\Product;
+use App\Utility\Responser;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -17,9 +18,9 @@ class ProductController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $products = Product::all();
-
-        return response()->json($products);
+       return Responser::json(
+           Product::all()
+       );
     }
 
     /**
@@ -27,19 +28,11 @@ class ProductController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        Product::create($request->only([
-            'productCode',
-            'productName',
-            'productLine',
-            'productScale',
-            'productVendor',
-            'productDescription',
-            'quantityInStock',
-            'buyPrice',
-            'MSRP',
-        ]));
+        Product::create(
+            $request->validated()
+        );
 
-        return response()->json("Product created");
+        return Responser::json(message: "Product created successfully");
     }
 
     /**
@@ -47,7 +40,9 @@ class ProductController extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
-        return Product::where("productCode", $id)->get();
+        return Responser::json(
+          data: Product::where("productCode", $id)->firstorFail()
+        );
     }
 
     /**
@@ -55,18 +50,12 @@ class ProductController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        Product::where("productCode", $id)->first()->update($request->only([
-            'productName',
-            'productLine',
-            'productScale',
-            'productVendor',
-            'productDescription',
-            'quantityInStock',
-            'buyPrice',
-            'MSRP',
-        ]));
+        Product::where("productCode", $id)
+            ->firstOrFail()->update(
+            $request->validated()
+        );
 
-        return response()->json("Product updated");
+        return Responser::json();
     }
 
     /**
@@ -74,8 +63,9 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        Product::where("productCode", $id)->first()->delete();
+        Product::findOrFail($id)
+            ->delete();
 
-        return response()->json("Product deleted");
+        return Responser::json(status: 204);
     }
 }

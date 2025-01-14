@@ -8,6 +8,7 @@ use App\Http\Requests\ProductLine\ShowRequest;
 use App\Http\Requests\ProductLine\StoreRequest;
 use App\Http\Requests\ProductLine\UpdateRequest;
 use App\Models\ProductLine;
+use App\Utility\Responser;
 use Illuminate\Http\Request;
 
 class ProductLineController extends Controller
@@ -17,9 +18,9 @@ class ProductLineController extends Controller
      */
     public function index(IndexRequest $request)
     {
-        $product_lines = ProductLine::all();
-
-        return response()->json($product_lines);
+        return Responser::json(
+            ProductLine::all()
+        );
     }
 
     /**
@@ -27,14 +28,11 @@ class ProductLineController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        ProductLine::create($request->only([
-            'productLine',
-            'textDescription',
-            'htmlDescription',
-            'image',
-        ]));
+        ProductLine::create(
+            $request->validated()
+        );
 
-        return response()->json("ProductLine created");
+        return Responser::json(message: "Product Line Added");
     }
 
     /**
@@ -42,7 +40,9 @@ class ProductLineController extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
-        return ProductLine::where("productLine", $id)->get();
+        return Responser::json(
+            data: ProductLine::where("productLine", $id)->firstOrFail()
+        );
     }
 
     /**
@@ -50,13 +50,12 @@ class ProductLineController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        ProductLine::where("productLine", $id)->first->update($request->only([
-            'textDescription',
-            'htmlDescription',
-            'image',
-        ]));
+        ProductLine::where("productLine", $id)
+            ->firstOrFail()->update(
+                $request->validated()
+            );
 
-        return response()->json("ProductLine updated");
+        return Responser::json();
     }
 
     /**
@@ -64,8 +63,9 @@ class ProductLineController extends Controller
      */
     public function destroy(string $id)
     {
-        ProductLine::where("productLine", $id)->first()->delete();
+        ProductLine::findOrFail($id)
+            ->delete();
 
-        return response()->json("ProductLine deleted");
+        return Responser::json();
     }
 }
