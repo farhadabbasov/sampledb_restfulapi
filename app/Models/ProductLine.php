@@ -13,7 +13,7 @@ class ProductLine extends Model
     protected $keyType = 'string';
     public $timestamps = false;
 
-
+   protected $table = "productlines";
 
     protected $fillable = [
         'productLine',

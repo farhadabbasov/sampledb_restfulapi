@@ -18,8 +18,16 @@ class ProductLineController extends Controller
      */
     public function index(IndexRequest $request)
     {
+        /* Request-də validasiya edilmis deyerleri gotururuk */
+//         $validatedData = $request->validated();
+
+        $statement = ProductLine::query();
+        if ($request->has('productLine')) {
+            $request->where('productLine', $request->get('productLine'));
+        }
+
         return Responser::json(
-            ProductLine::all()
+          $statement->get()
         );
     }
 

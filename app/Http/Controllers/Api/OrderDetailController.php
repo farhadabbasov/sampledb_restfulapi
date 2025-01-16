@@ -19,8 +19,16 @@ class OrderDetailController extends Controller
      */
     public function index(IndexRequest $request)
     {
+        $request->validated();
+
+        $statement = OrderDetail::query();
+
+        if ($request->has('orderNumber')) {
+            $request->where('orderNumber',$request->get('orderNumber'));
+        }
+
         return Responser::json(
-            OrderDetail::all()
+            $statement->get()
         );
     }
 

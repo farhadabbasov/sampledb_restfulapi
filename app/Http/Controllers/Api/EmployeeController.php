@@ -21,7 +21,8 @@ class EmployeeController extends Controller
     {
         $requestedData = $request->validated();
 //        $statement = Employee::when(!empty($requestedData['lastName']), function ($query) use ($requestedData) {
-//            $query->where('lastName',$requestedData['lastName']);
+//            $query->where('lastName',$
+//requestedData['lastName']);
 //        })
 //        ->when(!empty($requestedData['firstName']), function ($query) use ($requestedData) {
 //            $query->where('firstName',$requestedData['firstName']);
@@ -33,8 +34,19 @@ class EmployeeController extends Controller
         $statement = Employee::query();
 
         if($request->has("firstName")){
+
             $statement->where("firstname",$request->get('firstName'));
         }
+
+        /*
+         *
+         * 1-ci stepde select * from employeers
+         *
+         * 2-ci select firstname from employeers where firstname = 'Mary'
+         *
+         * 3-cu  select * from employeers where firstname = 'Mary' and lastname = "lastname"
+         *
+         */
 
         return Responser::json(
             $statement->get()
@@ -50,7 +62,7 @@ class EmployeeController extends Controller
             $request->validated()
         );
 
-        return Responser::json(message: "men oz mesajimi yazdim");
+        return Responser::json(message: "Employee created successfully");
     }
 
     /**

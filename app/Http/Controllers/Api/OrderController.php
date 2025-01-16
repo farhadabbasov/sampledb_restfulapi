@@ -7,6 +7,7 @@ use App\Http\Requests\Order\IndexRequest;
 use App\Http\Requests\Order\ShowRequest;
 use App\Http\Requests\Order\StoreRequest;
 use App\Http\Requests\Order\UpdateRequest;
+use App\Http\Resources\OrderCollectionResource;
 use App\Models\Office;
 use App\Models\Order;
 use App\Utility\Responser;
@@ -19,8 +20,16 @@ class OrderController extends Controller
      */
     public function index(IndexRequest $request)
     {
+        $request->validated();
+
+        $statement = Order::query();
+
+        if($request->has('orderNumber')){
+            $statement->where('orderNumber',$request->get('orderNumber'));
+        }
+
         return Responser::json(
-            Order::all()
+            $statement->get()
         );
     }
 
@@ -41,8 +50,13 @@ class OrderController extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
+        $order = Order::with([
+            'customer',
+            'orderDetails.products.productLine'
+        ])->where('orderNumber', $id)->firstOrFail();
+
         return Responser::json(
-            data: Office::where('orderNumber', $id)->firstOrFail()
+            data:new OrderCollectionResource($order)
         );
     }
 

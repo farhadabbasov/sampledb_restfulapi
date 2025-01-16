@@ -18,9 +18,17 @@ class PaymentController extends Controller
      */
     public function index(IndexRequest $request)
     {
-       return Responser::json(
-           Payment::all()
-       );
+        $request->validated();
+
+        $statement = Payment::query();
+
+        if ($request->has('search')) {
+            $request->get('checkNumber', $request->get('checkNumber'));
+        }
+
+        return Responser::json(
+          $statement->get()
+        );
     }
 
     /**

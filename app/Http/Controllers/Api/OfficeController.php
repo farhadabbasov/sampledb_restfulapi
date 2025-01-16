@@ -18,8 +18,16 @@ class OfficeController extends Controller
      */
     public function index(IndexRequest $request)
     {
+        $request->validated();
+
+        $statement = Office::query();
+
+        if ($request->has('officeCode')) {
+            $statement = $statement->where('officeCode', $request->get('officeCode'));
+        }
+
         return Responser::json(
-            Office::all()
+            $statement->get()
         );
     }
 

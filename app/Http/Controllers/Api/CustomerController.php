@@ -18,8 +18,16 @@ class CustomerController extends Controller
      */
     public function index(IndexRequest $request)
     {
+        $request->validated();
+
+        $statement = Customer::query();
+
+        if($request->has('customerName')){
+            $statement->where('customerName',$request->get('customerName'));
+        }
+
         return Responser::json(
-            Customer::all()
+            $statement->get()
         );
     }
 
@@ -32,7 +40,7 @@ class CustomerController extends Controller
             $request->validated()
         );
 
-       return Responser::json( message: "men oz mesajimi yazdim");
+       return Responser::json( message: "Customer created successfully.");
     }
 
     /**
@@ -40,8 +48,12 @@ class CustomerController extends Controller
      */
     public function show(ShowRequest $request, $id)
     {
+        $customer = Customer::with([
+            'payments',
+        ])->where('customerNumber',$id)->firstOrFail();
+
        return Responser::json(
-           data:Customer::where("customerNumber",$id)->firstOrFail()
+           data: $customer
        );
     }
 

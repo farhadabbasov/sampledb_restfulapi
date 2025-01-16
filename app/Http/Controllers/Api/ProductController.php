@@ -18,9 +18,16 @@ class ProductController extends Controller
      */
     public function index(IndexRequest $request)
     {
-       return Responser::json(
-           Product::all()
-       );
+        $request->validated();
+
+        $statement = Product::query();
+        if ($request->has('productCode')) {
+            $request->where('productCode', $request->get('productCode'));
+        }
+
+        return Responser::json(
+          $statement->get()
+        );
     }
 
     /**

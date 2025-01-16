@@ -25,7 +25,7 @@ class Order extends Model
         'customerNumber',
     ];
 
-    public function customers(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function customer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customerNumber', 'customerNumber');
     }

@@ -20,6 +20,8 @@ class OrderDetail extends Model
         'orderLineNumber',
     ];
 
+    protected $table ='orderdetails';
+
     public function orders()
     {
         return $this->belongsTo(Order::class, 'orderNumber', 'orderNumber');
