@@ -11,7 +11,7 @@ class Responser
         $responseObject = [
             'data' => $data,
             'message' => $message,
-            'status' => $status
+            'status' => $status,
         ];
 
         return response()->json($responseObject,$status);

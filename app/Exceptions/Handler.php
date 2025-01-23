@@ -2,9 +2,12 @@
 
 namespace App\Exceptions;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
 
+use Illuminate\Validation\UnauthorizedException;
+use Throwable;
+use Symfony\Component\HttpFoundation\Response;
 class Handler extends ExceptionHandler
 {
     /**
@@ -22,7 +25,7 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-        //
+
     ];
 
     /**
@@ -42,7 +45,13 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+
+        });
+
+        $this->renderable(function (Throwable $e) {
+            if($e instanceof CustomUnAuthorizedException){
+                return response()->json(['error' => $e->getMessage(),'loggedAt'=>Carbon::now(),'ip_address'=>request()->ip()], Response::HTTP_UNAUTHORIZED);
+            }
         });
     }
 }

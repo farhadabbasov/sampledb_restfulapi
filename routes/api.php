@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\OrderDetailController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductLineController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Data2RetrieveController;
 use App\Http\Controllers\Data3RetrieveController;
 use App\Http\Controllers\Data4RetrieveController;
@@ -36,11 +38,22 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::post('/contact', [ContactController::class, 'sendEmail']);
+
 Route::group(['prefix'=>'web'],function (){
     Route::get('products',[DataRetrieveController::class,'index']);
     Route::get('users',[Data2RetrieveController::class,'index']);
     Route::get('comments',[Data3RetrieveController::class,'index']);
-    Route::get('todos',[Data4RetrieveController::class,'index']);
+    Route::get('todos', [Data4RetrieveController::class,'index']);
     Route::get('images',[Data5RetrieveController::class,'index']);
     Route::get('carts',[Data6RetrieveController::class,'index']);
     Route::get('posts',[Data7RetrieveController::class,'index']);

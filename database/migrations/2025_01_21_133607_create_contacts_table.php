@@ -11,8 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->foreign('customerNumber')->references('customerNumber')->on('customers')->onDelete('cascade');
+        Schema::create('contacts', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('surname');
+            $table->string('email');
+            $table->text('description');
+            $table->string('subject');
+            $table->timestamps();
         });
     }
 
@@ -21,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('contacts');
     }
 };

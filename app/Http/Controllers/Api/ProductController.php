@@ -62,7 +62,7 @@ class ProductController extends Controller
             $request->validated()
         );
 
-        return Responser::json();
+        return Responser::json(message: "Product updated successfully");
     }
 
     /**

@@ -12,6 +12,7 @@ class Product extends Model
     protected $primaryKey = 'productCode';
     public $incrementing = false;
     protected $keyType = 'string';
+
     public $timestamps = false;
 
 
